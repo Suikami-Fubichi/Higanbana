@@ -56,6 +56,21 @@ public class PlayerCombatController : MonoBehaviour
             //Perform Attack1
             if (!isAttacking)
             {
+                switch (attackString)
+                {
+                    case 0:
+                        attackDamage = 10;
+                        break;
+                    case 1:
+                        attackDamage = 20;
+                        break;
+                    case 2:
+                        attackDamage = 30;
+                        break;
+                    default:
+                        attackDamage = 10;
+                        break;
+                }
                 gotInput = false;
                 isAttacking = true;
                 anim.SetBool("attack1", true);
@@ -86,7 +101,7 @@ public class PlayerCombatController : MonoBehaviour
 
         foreach (Collider2D collider in detectedObjects)
         {
-            collider.transform.parent.SendMessage("Damage", attack1Damage);
+            collider.transform.parent.SendMessage("Damage", attackDamage);
             //Instantiate hit particle
         }
     }
@@ -98,21 +113,6 @@ public class PlayerCombatController : MonoBehaviour
         anim.SetBool("isAttacking", isAttacking);
         anim.SetBool("attack1", false);
         anim.SetInteger("attackString", attackString);
-        switch (attackString)
-        {
-            case 0:
-                attackDamage = 10;
-                break;
-            case 1:
-                attackDamage = 20;
-                break;
-            case 2: 
-                attackDamage = 30;
-                break;
-            default:
-                attackDamage = 10;
-                break;
-        }
         attackString++;
         if (attackString >= 3)
         {

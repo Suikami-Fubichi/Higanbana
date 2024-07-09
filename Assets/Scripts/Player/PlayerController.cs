@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -13,6 +12,9 @@ public class PlayerController : MonoBehaviour
     private float dashTimeLeft;
     private float lastImageXpos;
     private float lastDash = -100;
+    private float knockbackStartTime;
+    [SerializeField]
+    private float knockbackDuration;
 
     private int amountOfJumpsLeft;
     private int facingDirection = 1;
@@ -25,9 +27,10 @@ public class PlayerController : MonoBehaviour
     private bool canWallJump;
     private bool isAttemptingToJump;
     private bool checkJumpMultiplier;
-    private bool canMove;
+    public bool canMove;
     private bool canFlip;
     private bool isDashing;
+    private bool knockback;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -50,6 +53,9 @@ public class PlayerController : MonoBehaviour
     public float dashSpeed = 25.0f;
     public float distanceBetweenImages = 0.1f;
     public float dashCooldown = 2.5f;
+
+    [SerializeField]
+    private Vector2 knockbackSpeed;
 
     public Vector2 wallHopDirection;
     public Vector2 wallJumpDirection;
@@ -78,6 +84,7 @@ public class PlayerController : MonoBehaviour
         CheckIfWallSliding();
         CheckJump();
         CheckDash();
+        CheckKnockback();
     }
 
     private void CheckSurroundings()
@@ -122,6 +129,27 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public bool GetDashStatus()
+    {
+        return isDashing;
+    }
+
+    public void Knockback(int direction)
+    {
+        knockback = true;
+        knockbackStartTime = Time.time;
+        rb.velocity = new Vector2(knockbackSpeed.x * direction, knockbackSpeed.y);
+    }
+
+    private void CheckKnockback()
+    {
+        if(Time.time >= knockbackStartTime + knockbackDuration && knockback)
+        {
+            knockback = false;
+            rb.velocity = new Vector2(0.0f, rb.velocity.y);
+        }
+    }
+
     private void FixedUpdate()
     {
         ApplyMovement();
@@ -150,9 +178,19 @@ public class PlayerController : MonoBehaviour
         canFlip = true;
     }
 
+    public void DisableMove()
+    {
+        canMove = false;
+    }
+
+    public void EnableMove()
+    {
+        canMove = true;
+    }
+
     private void Flip()
     {
-        if (!isWallSliding && canFlip) 
+        if (!isWallSliding && canFlip && !knockback) 
         {
             facingDirection *= -1;
             isFacingRight = !isFacingRight;
@@ -228,6 +266,8 @@ public class PlayerController : MonoBehaviour
         PlayerAfterImagePool.Instance.GetFromPool();
         lastImageXpos = transform.position.x;
     }
+
+  
 
     public int GetFacingDirection()
     {
@@ -315,14 +355,15 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyMovement()
     {
-        if (!onFloor && !isWallSliding && movementInputDirection == 0)
+        if (!onFloor && !isWallSliding && movementInputDirection == 0 && !knockback)
         {
             rb.velocity = new Vector2(rb.velocity.x * airDragMultiplier, rb.velocity.y);
         }
-        else if(canMove)
+        else if(canMove && !knockback)
         {
             rb.velocity = new Vector2(movementSpeed * movementInputDirection, rb.velocity.y);
         }
+        
 
         if (isWallSliding)
         {

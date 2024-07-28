@@ -20,10 +20,15 @@ public class GameManager : MonoBehaviour
 
     private HealthBar healthBar;
 
+    private PlayerStats stats;
+
+    private ProjectileHoming projectile;
+
     private void Start()
     {
         CVC = GameObject.Find("Player Camera").GetComponent<CinemachineVirtualCamera>();
         healthBar = GameObject.Find("Health UI").GetComponent<HealthBar>();
+        stats = GameObject.Find("Player").GetComponent<PlayerStats>();
     }
 
     private void Update()
@@ -50,6 +55,8 @@ public class GameManager : MonoBehaviour
             CVC.m_Follow = playerTemp.transform;
             respawn = false;
             healthBar.UpdateHealth(100f, 100f);
+            stats.ResetHP();
+            projectile.UpdatePlayer();
         }
     }
 }

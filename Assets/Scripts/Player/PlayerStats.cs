@@ -34,6 +34,22 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
+    public void Heal(float amount)
+    {
+        currentHealth += amount;
+        if(currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+        GM.UpdateHealth(currentHealth, maxHealth);
+    }
+
+    public void ResetHP()
+    {
+        currentHealth = 100.0f;
+        GM.UpdateHealth(currentHealth, maxHealth);
+    }
+
     private void Die()
     {
         Instantiate(deathChunkParticle, transform.position, deathChunkParticle.transform.rotation);

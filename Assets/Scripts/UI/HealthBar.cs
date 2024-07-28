@@ -10,9 +10,14 @@ public class HealthBar : MonoBehaviour
     public Slider healthSlider;
     public TMP_Text hpText;
 
+
     public void UpdateHealth(float amount, float maxHP)
     {
         healthSlider.value = amount;
+        if(amount < 0)
+        {
+            amount = 0;
+        }
         string text = (amount + "/" + maxHP);
         hpText.SetText(text);
     }

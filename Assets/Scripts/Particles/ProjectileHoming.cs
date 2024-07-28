@@ -24,6 +24,12 @@ public class ProjectileHoming : MonoBehaviour
         target = GameObject.Find("Player").transform;
     }
 
+    public void UpdatePlayer()
+    {
+        pc = GameObject.Find("Player").GetComponent<PlayerController>();
+        target = GameObject.Find("Player").transform;
+    }
+
     private void FixedUpdate()
     {
         Vector2 direction = (Vector2)target.position - rb.position;

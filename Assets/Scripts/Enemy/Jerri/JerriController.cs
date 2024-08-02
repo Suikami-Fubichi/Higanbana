@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class JerriController : MonoBehaviour
 {
@@ -9,40 +12,153 @@ public class JerriController : MonoBehaviour
     private Rigidbody2D rb;
 
     [SerializeField]
-    private Transform topleft, topright, botleft, botright;
+    private Transform projPos, rainPos, groundCheck;
+
 
     [SerializeField]
-    private LayerMask whatIsPlayer;
+    private LayerMask whatIsPlayer, whatIsGround;
+
+    [SerializeField]
+    private GameObject projectile;
 
     private Vector2 botLeft, topRight;
 
     private bool isAttacking;
+    private bool isAwake;
+    private bool isFacingRight;
+    private bool onFloor;
 
     [SerializeField]
-    private float maxHP;
+    private float maxHP, jumpForce, dashSpeed, walkSpeed, groundCheckRadius;
     private float currentHP;
+
+    private float facingDirection = -1;
+
+    [SerializeField]
+    private GameObject player;
+
+    private Transform target;
+
 
     void Start()
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        player = GameObject.Find("Player");
+        target = player.transform;
         currentHP = maxHP;
-        botLeft.Set(botleft.position.x, botleft.position.y);
-        topRight.Set(topright.position.x, topright.position.y);
     }
 
     private void CheckAttack()
     {
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetKeyDown(KeyCode.V) && !isAttacking)
         {
             isAttacking = true;
             anim.Play("3hitCombo");
         }
+        if (Input.GetKeyDown(KeyCode.F) && !isAttacking)
+        {
+            isAttacking = true;
+            anim.Play("BackupShot");
+        }
+        if(Input.GetKeyUp(KeyCode.C) && !isAttacking)
+        {
+            isAttacking = true;
+            anim.Play("ArrowRain");
+        }
+        if (Input.GetKeyUp(KeyCode.Z) && !isAttacking)
+        {
+            isAttacking = true;
+            anim.Play("JumpShot");
+        }
     }
 
-    private void CheckInRange()
+    public float GetFacingDirection()
     {
-        Collider2D hit = Physics2D.OverlapArea(botLeft, topRight, whatIsPlayer);
+        return facingDirection;
+    }
+
+    private void spawnProjectile()
+    {
+        float rotation = 0;
+        if(isFacingRight)
+        {
+            rotation = 180;
+        }
+        Instantiate(projectile, projPos.position, Quaternion.Euler(0.0f, 0.0f, rotation));
+    }
+
+    private void RainArrow()
+    {
+        float rotation = 0;
+        if (isFacingRight)
+        {
+            rotation = 135;
+        }
+        Instantiate(projectile, rainPos.position, Quaternion.Euler(0.0f, 0.0f, 10 + rotation));
+        Instantiate(projectile, rainPos.position, Quaternion.Euler(0.0f, 0.0f, 25 + rotation));
+        Instantiate(projectile, rainPos.position, Quaternion.Euler(0.0f, 0.0f, 40 + rotation));
+    }
+
+    private void JumpShot()
+    {
+        float rotation = 0;
+        if (isFacingRight)
+        {
+            rotation = 135;
+        }
+        Instantiate(projectile, projPos.position, Quaternion.Euler(0.0f, 0.0f, 10 + rotation));
+        Instantiate(projectile, projPos.position, Quaternion.Euler(0.0f, 0.0f, 25 + rotation));
+        Instantiate(projectile, projPos.position, Quaternion.Euler(0.0f, 0.0f, 40 + rotation));
+    }
+
+    private void Chase()
+    {
+        if (isAwake)
+        {
+            target.position = player.transform.position;
+            if (!isAttacking) {
+                //player = GameObject.Find("Player");
+                if (target.position.x > gameObject.transform.position.x)
+                {
+                    isFacingRight = true;
+                    if(facingDirection < 0)
+                    {
+                        Flip();
+                    }
+                }
+                else if (target.position.x < gameObject.transform.position.x)
+                {
+                    isFacingRight = false;
+                    if(facingDirection > 0)
+                    {
+                        Flip();
+                    }
+                }
+            rb.velocity = new Vector2(walkSpeed * facingDirection, rb.velocity.y);
+            }
+        }
+    }
+
+    private void Jump()
+    {
+        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+    }
+
+    private void Dash()
+    {
+        rb.velocity = new Vector2(dashSpeed * facingDirection, rb.velocity.y);
+    }
+
+    private void Flip()
+    {
+        facingDirection *= -1;
+        transform.Rotate(0.0f, 180.0f, 0.0f);
+    }
+
+    public void Wake(Collider2D collision)
+    {
+        isAwake = true;
     }
 
     public void FinishAttack()
@@ -53,6 +169,8 @@ public class JerriController : MonoBehaviour
     private void UpdateAnim()
     {
         anim.SetBool("IsAttacking", isAttacking);
+        anim.SetFloat("yVector", rb.velocity.y);
+        anim.SetBool("Grounded", onFloor);
     }
 
     private void Damage(float[] attackDetails)
@@ -69,23 +187,22 @@ public class JerriController : MonoBehaviour
         Destroy(gameObject);
     }
 
+    private void CheckFloor()
+    {
+        onFloor = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
+    }
+
     
     void Update()
     {
         CheckAttack();
         UpdateAnim();
+        Chase();
+        CheckFloor();
     }
 
     private void OnDrawGizmos()
     {
-        Vector2 botLeft = new Vector2(botleft.position.x, botleft.position.y);
-        Vector2 botRight = new Vector2(botright.position.x, botright.position.y);
-        Vector2 topRight = new Vector2(topright.position.x, topright.position.y);
-        Vector2 topLeft = new Vector2(topleft.position.x, topleft.position.y);
-
-        Gizmos.DrawLine(botLeft, botRight);
-        Gizmos.DrawLine(botRight, topRight);
-        Gizmos.DrawLine(topRight, topLeft);
-        Gizmos.DrawLine(topLeft, botLeft);
+        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 }

@@ -24,7 +24,7 @@ public class PlayerCombatController : MonoBehaviour
     //variable attackdmg^
 
     //Ability Vars
-    private float abilityCooldown = 1.0f;
+    //private float abilityCooldown = 1.0f;
     private float maxHoldTime = 1.0f;
     private float holdTimeScale = 0.25f;
     private float holdTimeStart = -100;
@@ -32,7 +32,7 @@ public class PlayerCombatController : MonoBehaviour
     private float abilityTime = 2.0f;
     private float abilityStartTime;
     private float abilityTimeLeft;
-    private float abilityVelocity = 30.0f;
+    //private float abilityVelocity = 30.0f;
     private float lastAbility = -100;
     private string comboString = "";
 
@@ -265,7 +265,6 @@ public class PlayerCombatController : MonoBehaviour
             if (abilityTimeLeft > 0)
             {
                 anim.SetBool("isAbility", isAbility);
-                //rb.velocity = new Vector2(abilityVelocity * PC.GetFacingDirection(), 0);
                 abilityTimeLeft -= Time.deltaTime;
 
             }

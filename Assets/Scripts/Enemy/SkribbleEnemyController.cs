@@ -7,7 +7,6 @@ public class SkribbleEnemyController : MonoBehaviour
 {
     private float spawnTimer = 3f;
     private float timeLeft;
-    private bool isSpawning = false;
     public GameObject projectile;
     public LayerMask playerMask;
     public float detectRadius = 10f;

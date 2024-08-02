@@ -150,6 +150,11 @@ public class JerriController : MonoBehaviour
         rb.velocity = new Vector2(dashSpeed * facingDirection, rb.velocity.y);
     }
 
+    private void BackDash()
+    {
+        rb.velocity = new Vector2(dashSpeed * 2 * facingDirection * -1, rb.velocity.y);
+    }
+
     private void Flip()
     {
         facingDirection *= -1;

@@ -98,6 +98,7 @@ public class PlayerCombatController : MonoBehaviour
         if (gotInput)
         {
             //Perform Attack1
+            PC.SlowMovement();
             if (!isAttacking)
             {
                 switch (attackString)
@@ -162,7 +163,8 @@ public class PlayerCombatController : MonoBehaviour
     private void FinishAttack1()
     {
         isAttacking = false;
-        
+        PC.NormalMovement();
+
         anim.SetBool("isAttacking", isAttacking);
         anim.SetBool("attack1", false);
         anim.SetInteger("attackString", attackString);

@@ -22,44 +22,44 @@ AnimationClip:
     curve:
     - time: 0
       value: {fileID: 21300000, guid: 0d09ce128239ec847aebd5578f021f20, type: 3}
-    - time: 0.028571429
+    - time: 0.04
       value: {fileID: 21300000, guid: 68b43922d5df03d49a988bf32b62e97f, type: 3}
-    - time: 0.057142857
+    - time: 0.08
       value: {fileID: 21300000, guid: d1e70ee82eca3c341844fe2d3c1f131d, type: 3}
-    - time: 0.08571429
+    - time: 0.12
       value: {fileID: 21300000, guid: 4535ca745fb095c41a8074351e38e8f8, type: 3}
-    - time: 0.114285715
+    - time: 0.16
       value: {fileID: 21300000, guid: c05c02a6fc30d7047bb8b4dcc26b9e3a, type: 3}
-    - time: 0.14285715
-      value: {fileID: 21300000, guid: 1c3494c9520e90a449d34eb34de4bb96, type: 3}
-    - time: 0.17142858
-      value: {fileID: 21300000, guid: eb1771b0f89c0e846b8e304f3c690054, type: 3}
     - time: 0.2
+      value: {fileID: 21300000, guid: 1c3494c9520e90a449d34eb34de4bb96, type: 3}
+    - time: 0.24
+      value: {fileID: 21300000, guid: eb1771b0f89c0e846b8e304f3c690054, type: 3}
+    - time: 0.28
       value: {fileID: 21300000, guid: cfb9d879d28c9f54bbcc4086da2686fd, type: 3}
-    - time: 0.22857143
+    - time: 0.32
       value: {fileID: 21300000, guid: 68ab0cc5f3d949f43ab13ec3ed4fdc58, type: 3}
-    - time: 0.25714287
+    - time: 0.36
       value: {fileID: 21300000, guid: f4d8cbdac16c63947ae855e5f5aa0234, type: 3}
-    - time: 0.2857143
-      value: {fileID: 21300000, guid: 7621ede994ff4b94e8afd30f72d1a246, type: 3}
-    - time: 0.31428573
-      value: {fileID: 21300000, guid: be83dcfc45c98fa42912f8eb6bc02240, type: 3}
-    - time: 0.34285715
-      value: {fileID: 21300000, guid: 63c283042cccf9740a58786a8fc95bce, type: 3}
-    - time: 0.37142858
-      value: {fileID: 21300000, guid: 480b9cacdfd4aeb4c91c8add8c168d59, type: 3}
     - time: 0.4
+      value: {fileID: 21300000, guid: 7621ede994ff4b94e8afd30f72d1a246, type: 3}
+    - time: 0.44
+      value: {fileID: 21300000, guid: be83dcfc45c98fa42912f8eb6bc02240, type: 3}
+    - time: 0.48
+      value: {fileID: 21300000, guid: 63c283042cccf9740a58786a8fc95bce, type: 3}
+    - time: 0.52
+      value: {fileID: 21300000, guid: 480b9cacdfd4aeb4c91c8add8c168d59, type: 3}
+    - time: 0.56
       value: {fileID: 21300000, guid: 0e600e1ca769b704f86df983248aaa7c, type: 3}
-    - time: 0.42857143
+    - time: 0.6
       value: {fileID: 21300000, guid: d5520a4a080f1b94ab28a2fb531ea406, type: 3}
-    - time: 0.45714286
+    - time: 0.64
       value: {fileID: 21300000, guid: 6ba866b93cff4b043848a6952e433e39, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
     flags: 2
-  m_SampleRate: 35
+  m_SampleRate: 25
   m_WrapMode: 0
   m_Bounds:
     m_Center: {x: 0, y: 0, z: 0}
@@ -98,7 +98,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.4857143
+    m_StopTime: 0.68
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -118,22 +118,15 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.028571429
+  - time: 0.04
     functionName: DisableFlip
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.08571429
+  - time: 0.12
     functionName: DisableMove
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.14285715
-    functionName: CheckAttackHitBox
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -146,21 +139,21 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.22857143
+  - time: 0.28
     functionName: CheckAttackHitBox
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.25714287
+  - time: 0.32
     functionName: CheckAttackHitBox
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.2857143
+  - time: 0.36
     functionName: CheckAttackHitBox
     data: 
     objectReferenceParameter: {fileID: 0}
@@ -168,20 +161,27 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.4
+    functionName: CheckAttackHitBox
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.56
     functionName: EnableFlip
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.42857143
+  - time: 0.6
     functionName: EnableMove
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.45714286
+  - time: 0.64
     functionName: FinishAbility1
     data: 
     objectReferenceParameter: {fileID: 0}

@@ -52,6 +52,7 @@ public class SkribbleEnemyController : MonoBehaviour
         }
     }
 
+
     private void Damage(float[] attackDetails)
     {
         currentHealth -= attackDetails[0];

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
 
 public class JerriController : MonoBehaviour
 {
@@ -35,7 +36,7 @@ public class JerriController : MonoBehaviour
     private float facingDirection = -1;
 
     [SerializeField]
-    private GameObject player;
+    private GameObject player, hitParticle;
 
     private Transform target;
 
@@ -71,6 +72,35 @@ public class JerriController : MonoBehaviour
             isAttacking = true;
             anim.Play("JumpShot");
         }
+    }
+
+    public void TriggerMelee()
+    {
+        isAttacking = true;
+        anim.Play("3hitCombo");
+    }
+
+    public void TriggerBackup()
+    {
+        isAttacking = true;
+        anim.Play("BackupShot");
+    }
+
+    public void TriggerRain()
+    {
+        isAttacking = true;
+        anim.Play("ArrowRain");
+    }
+
+    public void TriggerJumpShot()
+    {
+        isAttacking = true;
+        anim.Play("JumpShot");
+    }
+
+    public bool GetIsAttacking()
+    {
+        return isAttacking; 
     }
 
     public float GetFacingDirection()
@@ -181,7 +211,8 @@ public class JerriController : MonoBehaviour
     private void Damage(float[] attackDetails)
     {
         currentHP -= attackDetails[0];
-        if(currentHP < 0)
+        Instantiate(hitParticle, gameObject.transform.position, Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)));
+        if (currentHP < 0)
         {
             Die();
         }
@@ -200,7 +231,7 @@ public class JerriController : MonoBehaviour
     
     void Update()
     {
-        CheckAttack();
+       //CheckAttack();
         UpdateAnim();
         Chase();
         CheckFloor();

@@ -13,6 +13,8 @@ public class BossPerimeter : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        boss.SendMessage("Wake", collision);
+        if (collision.gameObject.tag == "Player") { 
+            boss.SendMessage("Wake", collision);
+        }
     }
 }

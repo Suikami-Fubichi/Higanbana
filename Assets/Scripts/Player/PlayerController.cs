@@ -168,6 +168,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void SlowMovement()
+    {
+        movementSpeed = 3.5f;
+    }
+
+    public void NormalMovement()
+    {
+        movementSpeed = 10.0f;
+    }
+
     public void DisableFlip()
     {
         canFlip = false;

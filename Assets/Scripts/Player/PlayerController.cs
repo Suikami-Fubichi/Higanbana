@@ -306,6 +306,8 @@ public class PlayerController : MonoBehaviour
                 isDashing = false;
                 canMove = true;
                 canFlip = true;
+
+                
             }
         }
     }

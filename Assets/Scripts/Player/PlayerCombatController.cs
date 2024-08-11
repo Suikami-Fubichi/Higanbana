@@ -101,25 +101,32 @@ public class PlayerCombatController : MonoBehaviour
             PC.SlowMovement();
             if (!isAttacking)
             {
-                switch (attackString)
+                if (PC.GetDashStatus())
                 {
-                    case 0:
-                        attackDamage = 10;
-                        break;
-                    case 1:
-                        attackDamage = 20;
-                        break;
-                    case 2:
-                        attackDamage = 30;
-                        break;
-                    default:
-                        attackDamage = 10;
-                        break;
+                    anim.Play("ability1");
                 }
-                gotInput = false;
-                isAttacking = true;
-                anim.SetBool("attack1", true);
-                anim.SetBool("isAttacking", isAttacking);
+                else
+                {
+                    switch (attackString)
+                    {
+                        case 0:
+                            attackDamage = 10;
+                            break;
+                        case 1:
+                            attackDamage = 20;
+                            break;
+                        case 2:
+                            attackDamage = 30;
+                            break;
+                        default:
+                            attackDamage = 10;
+                            break;
+                    }
+                    gotInput = false;
+                    isAttacking = true;
+                    anim.SetBool("attack1", true);
+                    anim.SetBool("isAttacking", isAttacking);
+                }
             }
         }
 

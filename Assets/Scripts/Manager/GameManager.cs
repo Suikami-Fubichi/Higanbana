@@ -45,18 +45,30 @@ public class GameManager : MonoBehaviour
     {
         respawnTimeStart = Time.time;
         respawn = true;
+        //player.transform.position = new Vector3(0.0f, 0.0f, 0.0f);
+
     }
 
     private void CheckRespawn()
     {
         if(Time.time >= respawnTimeStart + respawnTime && respawn)
         {
+            //player.GetComponent<Renderer>().enabled = true;
+            player.SetActive(true);
+            player.transform.position = new Vector3(0.0f, 0.0f, 0.0f);
+            respawn = false;
+            healthBar.UpdateHealth(100f, 100f);
+            stats.ResetHP();
+
+
+            //Old Respawn Func:
+            /*
             var playerTemp = Instantiate(player, respawnPoint);
             CVC.m_Follow = playerTemp.transform;
             respawn = false;
             healthBar.UpdateHealth(100f, 100f);
             stats.ResetHP();
-            projectile.UpdatePlayer();
+            projectile.UpdatePlayer();*/
         }
     }
 }

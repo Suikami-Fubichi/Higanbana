@@ -218,6 +218,13 @@ public class PlayerCombatController : MonoBehaviour
             comboString = "";
             ExitComboMode();
         }
+        else if (comboString.Equals("AAD") || comboString.Equals("DDA"))
+        {
+            anim.Play("Starburst Steven");
+            isAttacking = true;
+            comboString = "";
+            ExitComboMode();
+        }
         if (comboString.Length > 3 || Time.unscaledTime >= holdTimeStart + maxHoldTime)
         {
             comboString = "";
@@ -258,6 +265,7 @@ public class PlayerCombatController : MonoBehaviour
         isAbility = true;
         abilityTimeLeft = abilityTime;
         lastAbility = Time.time;
+        //anim.Play("Starburst Stream");
     }
 
     private void CheckAbility()
@@ -278,6 +286,11 @@ public class PlayerCombatController : MonoBehaviour
         isAbility = false;
 
         anim.SetBool("isAbility", isAbility);
+    }
+
+    private void ChangeDamage(float dmg)
+    {
+        attackDamage = dmg;
     }
 
     private void OnDrawGizmos()

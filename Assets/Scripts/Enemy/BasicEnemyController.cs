@@ -82,16 +82,13 @@ public class BasicEnemyController : MonoBehaviour
                 UpdateKnockbackState();
                 break;
             case State.Dead: 
-                UpdateDeadState(); 
+                
                 break;
         }
     }
 
     //--Moving--STATE------------------------------
-    private void EnterMovingState()
-    {
 
-    }
 
     private void UpdateMovingState()
     {
@@ -109,11 +106,6 @@ public class BasicEnemyController : MonoBehaviour
             movement.Set(movementSpeed * facingDirection, aliveRb.velocity.y);
             aliveRb.velocity = movement;
         }
-    }
-
-    private void ExitMovingState()
-    {
-
     }
 
     //--KNOCKBACK--STATE--------------------------
@@ -147,15 +139,6 @@ public class BasicEnemyController : MonoBehaviour
         Instantiate(deathChunkParticle, alive.transform.position, deathChunkParticle.transform.rotation);
         Instantiate(deathBloodParticle, alive.transform.position, deathBloodParticle.transform.rotation);
         Destroy(gameObject);
-    }
-
-    private void UpdateDeadState()
-    {
-
-    }
-    private void ExitDeadState() 
-    { 
-    
     }
 
     //--OTHER--FUNCTIONS--------------------------------
@@ -218,20 +201,17 @@ public class BasicEnemyController : MonoBehaviour
         switch (currentState)
         {
             case State.Moving:
-                ExitMovingState();
                 break;
             case State.Knockback:
                 ExitKnockbackState();
                 break;
             case State.Dead:
-                ExitDeadState();
                 break;
         }
 
         switch (state)
         {
             case State.Moving:
-                EnterMovingState();
                 break;
             case State.Knockback:
                 EnterKnockbackState();

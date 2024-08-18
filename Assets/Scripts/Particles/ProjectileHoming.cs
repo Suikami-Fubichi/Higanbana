@@ -8,8 +8,8 @@ public class ProjectileHoming : MonoBehaviour
     public Transform target;
 
 
-    public float speed = 200f;
-    public float rotateSpeed = 200f;
+    public float speed;
+    public float rotateSpeed;
 
     private float[] attackDetails = new float[2];
 

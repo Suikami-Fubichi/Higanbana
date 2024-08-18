@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class Jerri3hit1 : MonoBehaviour
 {
-    public float attackRadius;
+    public float attackRadius, dmg;
     private float[] attackDetails = new float[2];
 
     [SerializeField]
@@ -17,7 +17,7 @@ public class Jerri3hit1 : MonoBehaviour
 
     private void Start()
     {
-        attackDetails[0] = 15;
+        attackDetails[0] = dmg;
     }
 
     public void CheckAttackHitBox()

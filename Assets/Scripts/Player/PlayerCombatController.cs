@@ -1,56 +1,50 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerCombatController : MonoBehaviour
 {
+    // Configuration variables
     [SerializeField]
-    private bool combatEnabled;
+    private bool combatEnabled;            // Is combat enabled
     [SerializeField]
-    private float inputTimer, attack1Radius;
+    private float inputTimer, attack1Radius; // Time window for input and radius for attack detection
     [SerializeField]
-    private Transform attack1HitBoxPos;
+    private Transform attack1HitBoxPos;    // Position of the hitbox for attack 1
     [SerializeField]
-    private LayerMask whatIsDamageable;
+    private LayerMask whatIsDamageable;    // Layer mask for objects that can be damaged
 
+    // Combat state variables
     private bool gotInput, isAttacking;
-
-    private int attackString;
-
+    private int attackString;              // Tracks the current attack combo
     private float lastInputTime = Mathf.NegativeInfinity;
-    private float attackDamage;
-    private float[] attackDetails = new float[2];
-    //variable attackdmg^
+    private float attackDamage;            // Damage value of the current attack
+    private float[] attackDetails = new float[2]; // Array to store attack details (damage, position)
 
-    //Ability Vars
-    //private float abilityCooldown = 1.0f;
-    private float maxHoldTime = 1.0f;
-    private float holdTimeScale = 0.25f;
-    private float holdTimeStart = -100;
-    private float holdTimeLeft;
-    private float abilityTime = 2.0f;
-    private float abilityStartTime;
-    private float abilityTimeLeft;
-    //private float abilityVelocity = 30.0f;
-    private float lastAbility = -100;
-    private string comboString = "";
+    // Ability variables
+    private float maxHoldTime = 1.0f;      // Maximum time to hold input for abilities
+    private float holdTimeScale = 0.25f;   // Time scale when holding input for an ability
+    private float holdTimeStart = -100;    // Start time for holding input
+    private float holdTimeLeft;            // Time left to hold input for an ability
+    private float abilityTime = 2.0f;      // Duration of the ability
+    private float abilityStartTime;        // Start time for the ability
+    private float abilityTimeLeft;         // Time left for the ability duration
+    private float lastAbility = -100;      // Last time an ability was used
+    private string comboString = "";       // String to track the current combo input
 
-    private bool isAbility;
-    private bool isHolding;
-    private Vector2 abilityDirection;
+    private bool isAbility;                // Is the player using an ability
+    private bool isHolding;                // Is the player holding input for an ability
+    private Vector2 abilityDirection;      // Direction of the ability
 
+    // Components
     private Animator anim;
-
     private Rigidbody2D rb;
-
     private PlayerController PC;
     private PlayerStats PS;
 
     private void Start()
     {
+        // Initialize components and set initial states
         anim = GetComponent<Animator>();
-        anim.SetBool("canAttack", combatEnabled);
+        anim.SetBool("canAttack", combatEnabled); // Enable or disable combat based on initial setting
         PC = GetComponent<PlayerController>();
         PS = GetComponent<PlayerStats>();
         rb = GetComponent<Rigidbody2D>();
@@ -58,6 +52,7 @@ public class PlayerCombatController : MonoBehaviour
 
     private void Update()
     {
+        // Check for combat input, attack, and ability states
         CheckCombatInput();
         CheckAttacks();
         CheckStringCombo();
@@ -67,26 +62,25 @@ public class PlayerCombatController : MonoBehaviour
 
     private void CheckCombatInput()
     {
+        // Check for left mouse button input for attack
         if (Input.GetMouseButtonDown(0))
         {
             if (combatEnabled)
             {
-                //Attempt combat
                 gotInput = true;
-                lastInputTime = Time.time;
+                lastInputTime = Time.time; // Register the input time
             }
         }
+
+        // Check for right mouse button input to enter combo mode
         if (Input.GetMouseButtonDown(1))
         {
             if (combatEnabled)
             {
-                //if (Time.time >= (lastAbility + abilityCooldown))
-                //{
-                    EnterComboMode();
-                    //AttemptToAbility();
-                //}
+                EnterComboMode(); // Start combo mode
             }
         }
+        // Check for releasing right mouse button to exit combo mode
         else if (Input.GetMouseButtonUp(1))
         {
             ExitComboMode();
@@ -95,18 +89,21 @@ public class PlayerCombatController : MonoBehaviour
 
     private void CheckAttacks()
     {
+        // Check if the player received attack input
         if (gotInput)
         {
-            //Perform Attack1
-            PC.SlowMovement();
+            PC.SlowMovement(); // Slow down the player's movement during attack
+
             if (!isAttacking)
             {
+                // Determine if player is dashing and play appropriate animation
                 if (PC.GetDashStatus())
                 {
-                    anim.Play("ability1");
+                    anim.Play("ability1"); // Play ability animation during dash
                 }
                 else
                 {
+                    // Set attack damage based on the current attack combo string
                     switch (attackString)
                     {
                         case 0:
@@ -124,51 +121,54 @@ public class PlayerCombatController : MonoBehaviour
                     }
                     gotInput = false;
                     isAttacking = true;
-                    anim.SetBool("attack1", true);
+                    anim.SetBool("attack1", true); // Trigger attack animation
                     anim.SetBool("isAttacking", isAttacking);
                 }
             }
         }
 
+        // Reset input if too much time has passed since last input
         if (Time.time >= lastInputTime + inputTimer)
         {
-            //Wait for new input
             gotInput = false;
         }
     }
 
     private void CheckStringCombo()
     {
-        if(Time.time >= lastInputTime + 0.7f)
+        // Reset attack combo string if too much time has passed since last input
+        if (Time.time >= lastInputTime + 0.7f)
         {
             attackString = 0;
-            
         }
-        anim.SetInteger("attackString", attackString);
+        anim.SetInteger("attackString", attackString); // Update animator with current attack string
     }
 
     private void CheckAttackHitBox()
     {
+        // Detect objects in the attack hitbox and apply damage
         Collider2D[] detectedObjects = Physics2D.OverlapCircleAll(attack1HitBoxPos.position, attack1Radius, whatIsDamageable);
 
-        attackDetails[0] = attackDamage;
-        attackDetails[1] = transform.position.x;
+        attackDetails[0] = attackDamage; // Set damage value
+        attackDetails[1] = transform.position.x; // Set position for knockback direction
 
         foreach (Collider2D collider in detectedObjects)
         {
-            if (collider.transform.parent != null) { 
-                collider.transform.parent.SendMessage("Damage", attackDetails);
+            if (collider.transform.parent != null)
+            {
+                collider.transform.parent.SendMessage("Damage", attackDetails); // Send damage message to parent
             }
             else
             {
-                collider.transform.SendMessage("Damage", attackDetails);
+                collider.transform.SendMessage("Damage", attackDetails); // Send damage message directly
             }
-            //Instantiate hit particle
+            // Instantiate hit particle (if needed)
         }
     }
 
     private void FinishAttack1()
     {
+        // Reset attack state and return to normal movement
         isAttacking = false;
         PC.NormalMovement();
 
@@ -178,18 +178,20 @@ public class PlayerCombatController : MonoBehaviour
         attackString++;
         if (attackString >= 3)
         {
-            attackString = 0;
+            attackString = 0; // Reset attack string after a full combo
         }
     }
 
     private void Damage(float[] attackDetails)
     {
+        // Apply damage to the player
         if (!PC.GetDashStatus())
         {
             int direction;
 
-            PS.DecreaseHealth(attackDetails[0]);
+            PS.DecreaseHealth(attackDetails[0]); // Decrease player health
 
+            // Determine knockback direction
             if (attackDetails[1] < transform.position.x)
             {
                 direction = 1;
@@ -198,12 +200,13 @@ public class PlayerCombatController : MonoBehaviour
             {
                 direction = -1;
             }
-            PC.Knockback(direction);
+            PC.Knockback(direction); // Apply knockback to player
         }
     }
 
     private void EnterComboMode()
     {
+        // Enter combo mode and slow down time
         isHolding = true;
         Time.timeScale = holdTimeScale;
         holdTimeStart = Time.unscaledTime;
@@ -213,25 +216,29 @@ public class PlayerCombatController : MonoBehaviour
     {
         if (isHolding)
         {
-            comboString += ReadCombo();
-            if(comboString.Length == 3)
+            comboString += ReadCombo(); // Read combo input
+            if (comboString.Length == 3)
             {
-                Debug.Log(comboString);
+                Debug.Log(comboString); // Output combo string for debugging
             }
         }
-        if(comboString.Equals("ASD") || comboString.Equals("DSA"))
+
+        // Check for specific combo strings to trigger abilities
+        if (comboString.Equals("ASD") || comboString.Equals("DSA"))
         {
-            AttemptToAbility();
+            AttemptToAbility(); // Trigger ability
             comboString = "";
             ExitComboMode();
         }
         else if (comboString.Equals("AAD") || comboString.Equals("DDA"))
         {
-            anim.Play("Starburst Steven");
+            anim.Play("Starburst Steven"); // Play special ability animation
             isAttacking = true;
             comboString = "";
             ExitComboMode();
         }
+
+        // Reset combo string if it becomes too long or time runs out
         if (comboString.Length > 3 || Time.unscaledTime >= holdTimeStart + maxHoldTime)
         {
             comboString = "";
@@ -241,6 +248,7 @@ public class PlayerCombatController : MonoBehaviour
 
     private string ReadCombo()
     {
+        // Read and return combo input as a string
         string temp = "";
         if (Input.GetKeyDown(KeyCode.W))
         {
@@ -263,46 +271,48 @@ public class PlayerCombatController : MonoBehaviour
 
     private void ExitComboMode()
     {
+        // Exit combo mode and reset time scale
         isHolding = false;
         Time.timeScale = 1f;
     }
 
     private void AttemptToAbility()
     {
+        // Trigger an ability
         isAbility = true;
         abilityTimeLeft = abilityTime;
         lastAbility = Time.time;
-        //anim.Play("Starburst Stream");
     }
 
     private void CheckAbility()
     {
+        // Check and handle ability duration
         if (isAbility)
         {
             if (abilityTimeLeft > 0)
             {
                 anim.SetBool("isAbility", isAbility);
                 abilityTimeLeft -= Time.deltaTime;
-
             }
         }
     }
 
     private void FinishAbility1()
     {
+        // Finish ability and reset state
         isAbility = false;
-
         anim.SetBool("isAbility", isAbility);
     }
 
     private void ChangeDamage(float dmg)
     {
+        // Change the attack damage value
         attackDamage = dmg;
     }
 
     private void OnDrawGizmos()
     {
+        // Draw the hitbox gizmo in the editor
         Gizmos.DrawWireSphere(attack1HitBoxPos.position, attack1Radius);
     }
-
 }

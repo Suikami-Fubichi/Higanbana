@@ -50,6 +50,8 @@ public class PlayerStats : MonoBehaviour
         GM.UpdateHealth(currentHealth, maxHealth);
     }
 
+
+    //Spawns death particles on death, set player's active state to false and respawn
     private void Die()
     {
         Instantiate(deathChunkParticle, transform.position, deathChunkParticle.transform.rotation);
